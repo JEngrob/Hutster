@@ -1,0 +1,25 @@
+{
+  "name": "hutster-quiz-app",
+  "version": "1.0.0",
+  "description": "Live quiz app similar to Kahoot",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node --watch server/index.js",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "node server/index.js"
+  },
+  "keywords": ["quiz", "kahoot", "live", "real-time"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
