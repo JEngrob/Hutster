@@ -1,0 +1,258 @@
+.host-game {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.host-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.host-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.host-header h1 {
+  color: var(--primary-color);
+  font-size: 32px;
+}
+
+.game-pin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--primary-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.game-pin strong {
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+.waiting-area,
+.playing-area,
+.finished-area {
+  text-align: center;
+}
+
+.waiting-area h2,
+.playing-area h2,
+.finished-area h2 {
+  color: var(--dark);
+  margin-bottom: 24px;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+  min-height: 200px;
+}
+
+.player-badge {
+  background: var(--secondary-color);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-message {
+  grid-column: 1 / -1;
+  color: #999;
+  font-style: italic;
+}
+
+.question-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.question-display {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.question-display h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: var(--dark);
+}
+
+.options-display {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.option-display {
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.option-display.correct {
+  border-color: var(--success-color);
+  background: rgba(39, 174, 96, 0.1);
+}
+
+.option-letter {
+  background: var(--secondary-color);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.option-display.correct .option-letter {
+  background: var(--success-color);
+}
+
+.option-text {
+  flex: 1;
+  text-align: left;
+  font-weight: 500;
+}
+
+.correct-info {
+  color: var(--success-color);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.mini-leaderboard {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.mini-leaderboard h3 {
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+
+.leaderboard-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.final-leaderboard {
+  margin: 30px 0;
+}
+
+.leaderboard-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 2px solid #e9ecef;
+  transition: transform 0.3s ease;
+}
+
+.leaderboard-card:hover {
+  transform: translateX(5px);
+}
+
+.leaderboard-card.rank-1 {
+  background: linear-gradient(135deg, #f5d442 0%, #f39c12 100%);
+  color: white;
+  border-color: #f39c12;
+}
+
+.leaderboard-card.rank-2 {
+  background: linear-gradient(135deg, #d5d5d5 0%, #95a5a6 100%);
+  color: white;
+  border-color: #95a5a6;
+}
+
+.leaderboard-card.rank-3 {
+  background: linear-gradient(135deg, #e08e5d 0%, #d35400 100%);
+  color: white;
+  border-color: #d35400;
+}
+
+.rank {
+  font-size: 24px;
+  font-weight: bold;
+  width: 50px;
+  text-align: center;
+}
+
+.player-info {
+  flex: 1;
+}
+
+.player-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.player-score {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .host-container {
+    padding: 20px;
+  }
+
+  .host-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .host-header h1 {
+    font-size: 24px;
+  }
+
+  .players-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .question-display h2 {
+    font-size: 20px;
+  }
+}
