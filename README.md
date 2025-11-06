@@ -10,12 +10,31 @@ Et online multiplayer musik-gætte-spil, hvor én vært styrer spillet fra en f�
 - ⏱️ Spillere gætter udgivelsesår
 - 📊 Tidslinje vokser dynamisk med hver korrekt sang
 - 🏆 Sidst tilbageværende spiller vinder
+- 🔒 Omfattende sikkerhedsforanstaltninger
+- 🛡️ Rate limiting og DoS beskyttelse
+- ✨ Valg mellem at bevare eller fjerne spillere ved reset
+- 📈 Vis gæt med korrekt/forkert markering efter svar
 
 ## Teknologi
 
 - **Frontend**: Next.js 14 med TypeScript og Tailwind CSS
 - **Backend**: Node.js Express server med Socket.io
 - **Real-time**: Socket.io for live kommunikation mellem vært og spillere
+
+## Sikkerhed
+
+Applikationen inkluderer omfattende sikkerhedsforanstaltninger:
+
+- ✅ **Input validering**: Alle inputs valideres og sanitizes
+- ✅ **XSS beskyttelse**: Player names sanitizes for at forhindre XSS angreb
+- ✅ **Rate limiting**: 100 requests per minut per socket
+- ✅ **DoS beskyttelse**: 
+  - Max 50 spillere per rum
+  - Max 5 rum per socket
+- ✅ **CORS**: Restriktiv CORS konfiguration
+- ✅ **Security headers**: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection
+- ✅ **Error handling**: Omfattende error handling på både server og client
+- ✅ **Input sanitization**: Room IDs og player names valideres strengt
 
 ## Installation
 
