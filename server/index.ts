@@ -439,26 +439,29 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     
-    // Clean up room count
-    socketRoomCount.delete(socket.id);
-    
     // Find and remove player from room
-    for (const [roomId, room] of Array.from(io.sockets.adapter.rooms.entries())) {
-      if (room.has(socket.id)) {
-        removePlayerFromRoom(roomId, socket.id);
-        
-        // Update room count if this was a host
-        if (room.gameState.hostId === socket.id) {
-          const count = socketRoomCount.get(socket.id) || 0;
-          socketRoomCount.set(socket.id, Math.max(0, count - 1));
+    for (const [roomId, socketSet] of Array.from(io.sockets.adapter.rooms.entries())) {
+      if (socketSet.has(socket.id)) {
+        const room = getRoom(roomId);
+        if (room) {
+          // Update room count if this was a host
+          if (room.gameState.hostId === socket.id) {
+            const count = socketRoomCount.get(socket.id) || 0;
+            socketRoomCount.set(socket.id, Math.max(0, count - 1));
+          }
+          
+          removePlayerFromRoom(roomId, socket.id);
+          
+          io.to(roomId).emit('room:player-list', {
+            players: Array.from(room.gameState.players.values()),
+          });
         }
-        
-        io.to(roomId).emit('room:player-list', {
-          players: Array.from(room.gameState.players.values()),
-        });
         break;
       }
     }
+    
+    // Clean up room count
+    socketRoomCount.delete(socket.id);
   });
 });
 
