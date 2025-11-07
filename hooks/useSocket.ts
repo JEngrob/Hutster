@@ -1,7 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001';
+// Determine Socket.IO URL
+// In production/Azure, Socket.IO runs on the same port as Next.js
+// In development, it runs on a separate port
+const getSocketUrl = () => {
+  // If explicitly set, use that
+  if (process.env.NEXT_PUBLIC_SOCKET_URL) {
+    return process.env.NEXT_PUBLIC_SOCKET_URL;
+  }
+  
+  // In production, use the same origin (same port)
+  if (process.env.NODE_ENV === 'production' || typeof window !== 'undefined') {
+    // Use current origin (same port as frontend)
+    return typeof window !== 'undefined' ? window.location.origin : '';
+  }
+  
+  // Development fallback
+  return 'http://localhost:3001';
+};
+
+const SOCKET_URL = getSocketUrl();
 
 export function useSocket() {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -9,7 +28,15 @@ export function useSocket() {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    const newSocket = io(SOCKET_URL);
+    const socketUrl = getSocketUrl();
+    const newSocket = io(socketUrl, {
+      // Enable reconnection for better reliability
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5,
+      // Transports for Azure compatibility
+      transports: ['websocket', 'polling'],
+    });
     socketRef.current = newSocket;
 
     newSocket.on('connect', () => {
@@ -29,4 +56,6 @@ export function useSocket() {
 
   return { socket, isConnected };
 }
+
+
 

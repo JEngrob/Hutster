@@ -52,8 +52,14 @@ function getPositionRelativeToTimeline(year: number, timeline: number[]): string
 
 /**
  * Inserts a year into the timeline in chronological order
+ * Prevents duplicates - if year already exists, returns timeline unchanged
  */
 export function insertYearIntoTimeline(year: number, timeline: number[]): number[] {
+  // Check if year already exists in timeline
+  if (timeline.includes(year)) {
+    return timeline; // Return unchanged if duplicate
+  }
+  
   const newTimeline = [...timeline, year];
   return newTimeline.sort((a, b) => a - b);
 }

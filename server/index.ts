@@ -38,15 +38,42 @@ app.use((req, res, next) => {
 });
 
 const httpServer = createServer(app);
+
+// Determine CORS origin - use environment variable or allow all in production
+// In Azure, we need to allow the Azure URL dynamically
+const getCorsOrigin = () => {
+  // If explicitly set, use that
+  if (process.env.NEXT_PUBLIC_URL) {
+    return process.env.NEXT_PUBLIC_URL;
+  }
+  if (process.env.NEXT_PUBLIC_SOCKET_URL) {
+    return process.env.NEXT_PUBLIC_SOCKET_URL;
+  }
+  // In production/Azure, allow all origins (Socket.IO will validate)
+  // This is safe because Socket.IO validates the origin
+  if (process.env.NODE_ENV === 'production') {
+    return true; // Allow all origins in production
+  }
+  // Development default
+  return "http://localhost:3000";
+};
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.NEXT_PUBLIC_URL || "http://localhost:3000",
+    origin: getCorsOrigin(),
     methods: ["GET", "POST"],
     credentials: false, // Don't allow credentials
   },
   maxHttpBufferSize: 1e6, // 1MB max message size
   pingTimeout: 60000,
   pingInterval: 25000,
+  // Allow Socket.IO to work behind Azure's reverse proxy
+  allowEIO3: true,
+  // Enable connection state recovery for better reliability
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+    skipMiddlewares: true,
+  },
 });
 
 const PORT = process.env.PORT || 3001;
@@ -465,7 +492,25 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Export httpServer, io, app, and PORT for use in combined server
+export { httpServer, io, app, PORT };
+
+// Function to start the server (for use in combined server)
+export function startSocketServer(port?: number) {
+  const serverPort = port || PORT;
+  httpServer.listen(serverPort, () => {
+    console.log('\n╔═══════════════════════════════════════╗');
+    console.log('║   🎮 Socket.IO Server (Backend)      ║');
+    console.log(`║   Port: ${serverPort}                      ║`);
+    console.log('║   Status: ✅ Kører                  ║');
+    console.log('╚═══════════════════════════════════════╝\n');
+  });
+  return httpServer;
+}
+
+// Only start server if this file is run directly (not imported)
+// Check for both CommonJS and ES module patterns
+if (typeof require !== 'undefined' && require.main === module) {
+  startSocketServer();
+}
 

@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useSocket } from '@/hooks/useSocket';
 import { Socket } from 'socket.io-client';
-import Timeline from '@/components/Timeline';
 
 type PlayerState = 'join' | 'waiting' | 'guessing' | 'result' | 'spectating';
 
@@ -45,6 +44,7 @@ export default function PlayerPage() {
       setGuess('');
       setSubmittedGuess(null);
       setRoundResult(null);
+      setError(null); // Clear error when game starts
     };
 
     const handleGuessSubmitted = (data: { year: number }) => {
@@ -70,6 +70,7 @@ export default function PlayerPage() {
       setGuess('');
       setSubmittedGuess(null);
       setRoundResult(null);
+      setError(null); // Clear error when next round starts
     };
 
     const handleError = (data: { message: string }) => {
@@ -130,6 +131,7 @@ export default function PlayerPage() {
       return;
     }
 
+    setError(null); // Clear error when submitting valid guess
     socket.emit('player:submit-guess', { roomId, year });
   };
 
@@ -212,12 +214,8 @@ export default function PlayerPage() {
         {/* Guessing Screen */}
         {state === 'guessing' && (
           <div className="bg-white rounded-2xl shadow-2xl p-8">
-            <h2 className="text-2xl font-bold text-center mb-4">Runde {currentRound}</h2>
-            
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Tidslinje</h3>
-              <Timeline years={timeline} startYear={startYear} />
-            </div>
+            <h2 className="text-2xl font-bold text-center mb-2">Runde {currentRound}</h2>
+            <p className="text-center text-gray-600 mb-6">Hej, {playerName}!</p>
 
             {submittedGuess === null ? (
               <div className="space-y-4">
@@ -228,7 +226,10 @@ export default function PlayerPage() {
                   <input
                     type="number"
                     value={guess}
-                    onChange={(e) => setGuess(e.target.value)}
+                    onChange={(e) => {
+                      setGuess(e.target.value);
+                      setError(null); // Clear error when user starts typing
+                    }}
                     placeholder="f.eks. 1989"
                     min="1900"
                     max="2100"
@@ -251,8 +252,7 @@ export default function PlayerPage() {
               </div>
             ) : (
               <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Dit gæt: {submittedGuess}</p>
+                <p className="text-gray-600 text-lg">Dit gæt: {submittedGuess}</p>
                 <p className="text-sm text-gray-500 mt-2">Venter på andre spillere...</p>
               </div>
             )}
@@ -270,10 +270,6 @@ export default function PlayerPage() {
             <p className="text-gray-600 mb-4">
               Korrekt år: {roundResult.correctYear}
             </p>
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-2">Opdateret tidslinje</h3>
-              <Timeline years={timeline} startYear={startYear} />
-            </div>
             <p className="text-sm text-gray-500 mt-4">Venter på næste runde...</p>
           </div>
         )}
@@ -289,10 +285,6 @@ export default function PlayerPage() {
             <p className="text-gray-600 mb-4">
               Korrekt år: {roundResult.correctYear}
             </p>
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-2">Tidslinje</h3>
-              <Timeline years={timeline} startYear={startYear} />
-            </div>
             <p className="text-sm text-gray-500 mt-4">Du kan stadig følge med i spillet</p>
           </div>
         )}

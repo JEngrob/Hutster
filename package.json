@@ -2,12 +2,19 @@
   "name": "hitster-online",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "powershell -Command \"$Host.UI.RawUI.WindowTitle = 'Next.js Frontend (3000)'; Write-Host '🚀 Starter Next.js Frontend Server...' -ForegroundColor Cyan; & npx next dev\"",
     "build": "next build",
     "start": "next start",
+    "start:combined": "tsx server.ts",
+    "start:production": "tsx server.ts",
     "lint": "next lint",
-    "server": "tsx watch server/index.ts"
+    "server": "powershell -Command \"$Host.UI.RawUI.WindowTitle = 'Socket.IO Backend (3001)'; Write-Host '🎮 Starter Socket.IO Backend Server...' -ForegroundColor Magenta; & npx tsx watch server/index.ts\"",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.3",
@@ -16,7 +23,9 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "socket.io": "^4.7.5",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
@@ -26,8 +35,8 @@
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.40",
-    "tailwindcss": "^3.4.7",
-    "tsx": "^4.16.2",
-    "typescript": "^5.5.4"
+    "tailwindcss": "^3.4.7"
   }
 }
+
+

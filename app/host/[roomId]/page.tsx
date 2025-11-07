@@ -205,15 +205,15 @@ export default function HostPage() {
           </div>
         )}
 
+        {/* Timeline - Full Width */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Tidslinje</h2>
+          <Timeline years={timeline} startYear={startYear} />
+        </div>
+
         <div className="grid md:grid-cols-2 gap-6">
           {/* Left Column */}
           <div className="space-y-6">
-            {/* Timeline */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Tidslinje</h2>
-              <Timeline years={timeline} startYear={startYear} />
-            </div>
-
             {/* Host Controls */}
             <HostControls
               onStartGame={handleStartGame}
@@ -232,7 +232,12 @@ export default function HostPage() {
               <h2 className="text-xl font-semibold mb-4">
                 Spillere ({players.length})
               </h2>
-              <PlayerList players={players} showGuesses={false} />
+              <PlayerList 
+                players={players} 
+                showGuesses={false} 
+                guesses={guesses}
+                gameState={gameState}
+              />
             </div>
 
             {/* Guesses Overview - Only show after answer is submitted */}
